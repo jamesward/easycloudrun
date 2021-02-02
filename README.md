@@ -52,6 +52,8 @@ Cloud Build:
 steps:
   - name: ghcr.io/jamesward/easycloudrun
     entrypoint: listservices
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
 ```
 
 GitHub Actions:
