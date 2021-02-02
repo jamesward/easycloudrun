@@ -23,10 +23,12 @@ docker run --rm \
 Cloud Build:
 - Service Account Roles: TODO
 ```
+TODO
 ```
 
 GitHub Actions:
 ```
+TODO
 ```
 
 ## listservices
@@ -47,8 +49,12 @@ docker run --rm \
 Cloud Build:
 - Service Account Roles: TODO
 ```
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: listservices
 ```
 
 GitHub Actions:
 ```
+TODO
 ```
