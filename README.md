@@ -7,13 +7,19 @@ Tools for automating Cloud Run stuff for use on your machine, Cloud Build, and G
 
 Deploy a service to all available regions and setup a GCLB in front
 
+Required Roles: Compute Admin, Cloud Run Admin, ???
+
 Run Locally:
 ```
-export DOMAIN???
+export PROJECT_ID=YOUR_PROJECT_ID
+export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export DOMAINS=YOUR_DOMAIN
 export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
 
 docker run --rm \
-  -eDOMAIN???
+  -ePROJECT_ID=$PROJECT_ID \
+  -eIMAGE_NAME=$IMAGE_NAME \
+  -eDOMAINS=$DOMAINS \
   -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
   -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
   --entrypoint=multiregion \
@@ -21,9 +27,14 @@ docker run --rm \
 ```
 
 Cloud Build:
-- Service Account Roles: TODO
 ```
-TODO
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: multiregion
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'IMAGE_NAME=$REPO_NAME'
+      - 'DOMAINS=YOUR_DOMAIN'
 ```
 
 GitHub Actions:
