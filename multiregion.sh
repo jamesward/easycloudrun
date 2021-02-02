@@ -128,13 +128,15 @@ readonly REGIONS=$(gcloud run regions list --project $PROJECT_ID --format="value
 
 #readonly REGIONS="us-central1 us-west1"
 
-# TODO: Do in parallel?
-for REGION in $REGIONS; do
+function deploy() {
+  local REGION=$1
+
   set -e
   # TODO: IMAGE_VERSION
   gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=gcr.io/$PROJECT_ID/$IMAGE_NAME --region=$REGION --ingress=internal-and-cloud-load-balancing --project $PROJECT_ID &> /dev/null
   set +e
-  echo "Deployed $IMAGE_NAME in $REGION"
+
+  echo -e "Deployed $IMAGE_NAME in $REGION\n"
 
   NEG_NAME=$IMAGE_NAME-neg-$REGION
 
@@ -151,13 +153,19 @@ for REGION in $REGIONS; do
     gcloud beta compute backend-services add-backend --global $BACKEND_NAME --network-endpoint-group-region=$REGION --network-endpoint-group=$NEG_NAME --project $PROJECT_ID
     set +e
   fi
+}
 
-  echo
+for REGION in $REGIONS; do
+  deploy $REGION &
+done
+
+for job in `jobs -p`; do
+  wait ${job}
 done
 
 readonly LB_IP=$(gcloud compute addresses describe --global $SERVICE_IP --format='value(address)' --project $PROJECT_ID)
 
-echo -e "Point $DOMAINS to $LB_IP\n"
+echo -e "\nPoint $DOMAINS to $LB_IP\n"
 
 echo -e "Check the status of your ssl-certificate with:\n"
 echo "gcloud beta compute ssl-certificates describe $CERT_NAME \\"
