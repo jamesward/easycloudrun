@@ -137,7 +137,17 @@ function deploy() {
   set +e
 
   echo -e "Deployed $IMAGE_NAME in $REGION\n"
+}
 
+for REGION in $REGIONS; do
+  deploy $REGION &
+done
+
+for job in `jobs -p`; do
+  wait ${job}
+done
+
+for REGION in $REGIONS; do
   NEG_NAME=$IMAGE_NAME-neg-$REGION
 
   gcloud beta compute network-endpoint-groups describe $NEG_NAME --region=$REGION --project $PROJECT_ID &> /dev/null
@@ -153,14 +163,6 @@ function deploy() {
     gcloud beta compute backend-services add-backend --global $BACKEND_NAME --network-endpoint-group-region=$REGION --network-endpoint-group=$NEG_NAME --project $PROJECT_ID
     set +e
   fi
-}
-
-for REGION in $REGIONS; do
-  deploy $REGION &
-done
-
-for job in `jobs -p`; do
-  wait ${job}
 done
 
 readonly LB_IP=$(gcloud compute addresses describe --global $SERVICE_IP --format='value(address)' --project $PROJECT_ID)
