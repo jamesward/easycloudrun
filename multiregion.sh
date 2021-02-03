@@ -132,8 +132,13 @@ function deploy() {
   local REGION=$1
 
   set -e
-  # TODO: IMAGE_VERSION
-  gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=gcr.io/$PROJECT_ID/$IMAGE_NAME --region=$REGION --ingress=internal-and-cloud-load-balancing --project $PROJECT_ID &> /dev/null
+  if [[ -z "${IMAGE_VERSION}" ]]; then
+    local IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME"
+  else
+    local IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME:$IMAGE_VERSION"
+  fi
+
+  gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION --ingress=internal-and-cloud-load-balancing --project $PROJECT_ID &> /dev/null
   set +e
 
   echo -e "Deployed $IMAGE_NAME in $REGION\n"
