@@ -24,7 +24,8 @@ fi
 
 # TODO: memory, cpu, env vars, etc
 
-. ./libs/build_id_to_trigger_id.sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. $DIR/libs/build_id_to_trigger_id.sh
 
 readonly SERVICE_IP=$IMAGE_NAME-ip
 
