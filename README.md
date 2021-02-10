@@ -35,6 +35,8 @@ steps:
     entrypoint: multiregion
     env:
       - 'PROJECT_ID=$PROJECT_ID'
+      - 'BUILD_ID=$BUILD_ID'
+      - 'COMMIT_SHA=$COMMIT_SHA'
       - 'IMAGE_NAME=$REPO_NAME'
       - 'IMAGE_VERSION=$COMMIT_SHA'
       - 'DOMAINS=YOUR_DOMAIN'
