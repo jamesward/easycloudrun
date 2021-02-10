@@ -24,6 +24,8 @@ fi
 
 # TODO: memory, cpu, env vars, etc
 
+. ./libs/build_id_to_trigger_id.sh
+
 readonly SERVICE_IP=$IMAGE_NAME-ip
 
 gcloud compute addresses describe --global $SERVICE_IP --project $PROJECT_ID &> /dev/null
@@ -138,7 +140,25 @@ function deploy() {
     local IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME:$IMAGE_VERSION"
   fi
 
-  gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION --ingress=internal-and-cloud-load-balancing --project $PROJECT_ID &> /dev/null
+  local _LABELS=()
+
+  if [[ ! -z "$_TRIGGER_ID" ]]; then
+    _LABELS+=("gcb-trigger-id=$_TRIGGER_ID")
+  fi
+
+  if [[ ! -z "$COMMIT_SHA" ]]; then
+    _LABELS+=("commit-sha=$COMMIT_SHA")
+  fi
+
+  if [[ ! -z "$BUILD_ID" ]]; then
+    _LABELS+=("gcb-build-id=$BUILD_ID")
+  fi
+
+  if [[ ${#_LABELS[@]} -gt 0 ]]; then
+    local LABELS="--labels=$(echo ${_LABELS[@]} | tr ' ' ',')"
+  fi
+
+  gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION --ingress=internal-and-cloud-load-balancing $LABELS --project $PROJECT_ID &> /dev/null
   set +e
 
   echo -e "Deployed $IMAGE_NAME in $REGION\n"
