@@ -91,17 +91,21 @@ steps:
 
 ## appsecret
 
-TODO
+Sets a generated env var in the .env file if the Cloud Run service does not already have one.
 
 Run Locally:
 ```
 export PROJECT_ID=YOUR_PROJECT_ID
 export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export ENV_NAME=YOUR_SECRETS_ENV_NAME
+export REGION=YOUR_REGION
 export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
 
 docker run --rm \
   -ePROJECT_ID=$PROJECT_ID \
   -eIMAGE_NAME=$IMAGE_NAME \
+  -eENV_NAME=$ENV_NAME \
+  -eREGION=$REGION \
   -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
   -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
   --entrypoint=appsecret \
@@ -116,6 +120,8 @@ steps:
     env:
       - 'PROJECT_ID=$PROJECT_ID'
       - 'IMAGE_NAME=$REPO_NAME'
+      - 'ENV_NAME=YOUR_ENV_NAME'
+      - 'REGION=YOUR_REGION'
 ```
 
 GitHub Actions:

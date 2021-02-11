@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 #
-# Based on: https://cloud.google.com/run/docs/multiple-regions
-#
 
 #set -uxo pipefail
 
@@ -17,6 +15,21 @@ if [[ -z "${IMAGE_NAME}" ]]; then
   exit 1
 fi
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+if [[ -z "${ENV_NAME}" ]]; then
+  echo "ENV_NAME env var not set"
+  exit 1
+fi
 
-exit 1
+if [[ -z "${REGION}" ]]; then
+  echo "REGION env var not set"
+  exit 1
+fi
+
+gcloud run services describe $IMAGE_NAME --project=$PROJECT_ID --platform=managed --region=$REGION --format='config(spec.template.spec.containers[0].env)' | grep "name = $ENV_NAME" &> /dev/null
+
+# if the service or the env var does not exist, set it
+if [ $? -ne 0 ]; then
+  readonly ENV_VALUE=$(head -c 64 /dev/urandom | base64 -w0)
+  echo "$ENV_NAME=$ENV_VALUE" >> .env
+fi
+
