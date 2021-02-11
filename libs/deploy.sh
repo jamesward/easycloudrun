@@ -33,7 +33,7 @@ else
   readonly IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME:$IMAGE_VERSION"
 fi
 
-readonly _LABELS=()
+_LABELS=()
 
 if [[ ! -z "$_TRIGGER_ID" ]]; then
   _LABELS+=("gcb-trigger-id=$_TRIGGER_ID")
