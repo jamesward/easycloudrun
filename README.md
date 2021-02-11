@@ -47,6 +47,83 @@ GitHub Actions:
 TODO
 ```
 
+
+## deploywithenvs
+
+Does a `gcloud run deploy` but automatically adds `--update-env-vars` for everything in a `.env` file.
+
+Run Locally:
+```
+export PROJECT_ID=YOUR_PROJECT_ID
+export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export IMAGE_VERSION=OPTIONAL_IMAGE_VERSION
+export REGION=us-central1 # or whatever region you want
+export _DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS
+export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
+
+docker run --rm \
+  -ePROJECT_ID=$PROJECT_ID \
+  -eIMAGE_NAME=$IMAGE_NAME \
+  -eIMAGE_VERSION=$IMAGE_VERSION \
+  -eREGION=$REGION \
+  -e_DEPLOY_OPTS=$_DEPLOY_OPTS \
+  -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
+  -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
+  --entrypoint=deploywithenvs \
+  ghcr.io/jamesward/easycloudrun
+```
+
+Cloud Build:
+```
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: deploywithenvs
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'BUILD_ID=$BUILD_ID'
+      - 'COMMIT_SHA=$COMMIT_SHA'
+      - 'IMAGE_NAME=$REPO_NAME'
+      - 'IMAGE_VERSION=$COMMIT_SHA'
+      - 'REGION=YOUR_REGION'
+      - '_DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTS'
+```
+
+
+## appsecret
+
+TODO
+
+Run Locally:
+```
+export PROJECT_ID=YOUR_PROJECT_ID
+export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
+
+docker run --rm \
+  -ePROJECT_ID=$PROJECT_ID \
+  -eIMAGE_NAME=$IMAGE_NAME \
+  -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
+  -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
+  --entrypoint=appsecret \
+  ghcr.io/jamesward/easycloudrun
+```
+
+Cloud Build:
+```
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: appsecret
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'IMAGE_NAME=$REPO_NAME'
+```
+
+GitHub Actions:
+```
+TODO
+```
+
+
 ## listservices
 
 Run Locally:

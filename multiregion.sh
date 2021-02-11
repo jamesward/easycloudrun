@@ -131,42 +131,10 @@ readonly REGIONS=$(gcloud run regions list --project $PROJECT_ID --format="value
 
 #readonly REGIONS="us-central1 us-west1"
 
-function deploy() {
-  local REGION=$1
-
-  set -e
-  if [[ -z "${IMAGE_VERSION}" ]]; then
-    local IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME"
-  else
-    local IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME:$IMAGE_VERSION"
-  fi
-
-  local _LABELS=()
-
-  if [[ ! -z "$_TRIGGER_ID" ]]; then
-    _LABELS+=("gcb-trigger-id=$_TRIGGER_ID")
-  fi
-
-  if [[ ! -z "$COMMIT_SHA" ]]; then
-    _LABELS+=("commit-sha=$COMMIT_SHA")
-  fi
-
-  if [[ ! -z "$BUILD_ID" ]]; then
-    _LABELS+=("gcb-build-id=$BUILD_ID")
-  fi
-
-  if [[ ${#_LABELS[@]} -gt 0 ]]; then
-    local LABELS="--labels=$(echo ${_LABELS[@]} | tr ' ' ',')"
-  fi
-
-  gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION --ingress=internal-and-cloud-load-balancing $LABELS --project $PROJECT_ID &> /dev/null
-  set +e
-
-  echo -e "Deployed $IMAGE_NAME in $REGION\n"
-}
+export _DEPLOY_OPTS="--ingress=internal-and-cloud-load-balancing"
 
 for REGION in $REGIONS; do
-  deploy $REGION &
+  $DIR/libs/deploy.sh &
 done
 
 for job in `jobs -p`; do
