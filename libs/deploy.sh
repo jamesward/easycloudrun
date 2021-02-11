@@ -2,7 +2,7 @@
 #
 # optional env var params:
 #   _TRIGGER_ID
-#   _DEPLOY_OPTS
+#   DEPLOY_OPTS
 #
 # todo: --platform=gke
 # todo: --no-allow-unauthenticated
@@ -51,7 +51,7 @@ if [[ ${#_LABELS[@]} -gt 0 ]]; then
   readonly LABELS="--labels=$(echo ${_LABELS[@]} | tr ' ' ',')"
 fi
 
-gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION $LABELS --project=$PROJECT_ID $_DEPLOY_OPTS &> /dev/null
+gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION $LABELS --project=$PROJECT_ID $DEPLOY_OPTS &> /dev/null
 
 set +e
 

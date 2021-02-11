@@ -28,7 +28,7 @@ if [[ -f ".env" ]]; then
   readarray -t _ENVS < .env
 
   if [[ ${#_ENVS[@]} -gt 0 ]]; then
-    export _DEPLOY_OPTS="$_DEPLOY_OPTS --update-env-vars=$(echo ${_ENVS[@]} | tr ' ' ',')"
+    export DEPLOY_OPTS="$DEPLOY_OPTS --update-env-vars=$(echo ${_ENVS[@]} | tr ' ' ',')"
   fi
 fi
 
