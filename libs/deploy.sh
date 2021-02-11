@@ -53,6 +53,8 @@ fi
 
 gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION $LABELS --project=$PROJECT_ID $DEPLOY_OPTS &> /dev/null
 
+# todo: on deploy error, show it
+
 set +e
 
 echo -e "Deployed $IMAGE_NAME in $REGION\n"

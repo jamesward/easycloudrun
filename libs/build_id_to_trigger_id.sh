@@ -8,6 +8,6 @@ fi
 if [[ -z "${BUILD_ID}" ]]; then
   echo "BUILD_ID env var not set"
 else
-  _TRIGGER_ID=$(gcloud builds describe ${BUILD_ID} --project=${PROJECT_ID} --format='value(buildTriggerId)')
+  export _TRIGGER_ID=$(gcloud builds describe ${BUILD_ID} --project=${PROJECT_ID} --format='value(buildTriggerId)')
 fi
 
