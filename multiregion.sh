@@ -131,7 +131,7 @@ readonly REGIONS=$(gcloud run regions list --project $PROJECT_ID --format="value
 
 #readonly REGIONS="us-central1 us-west1"
 
-export DEPLOY_OPTS="--ingress=internal-and-cloud-load-balancing"
+export DEPLOY_OPTS="--ingress=internal-and-cloud-load-balancing $DEPLOY_OPTS"
 
 for REGION in $REGIONS; do
   export REGION
