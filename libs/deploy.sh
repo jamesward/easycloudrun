@@ -51,13 +51,13 @@ if [[ ${#_LABELS[@]} -gt 0 ]]; then
 fi
 
 
-readonly SVC_ACCOUNT=$IMAGE_NAME@$PROJECT_ID.iam.gserviceaccount.com
+readonly SVC_ACCOUNT=$IMAGE_NAME-run@$PROJECT_ID.iam.gserviceaccount.com
 
-gcloud iam service-accounts describe $SVC_ACCOUNT --project $PROJECT_ID &> /dev/null
+gcloud iam service-accounts describe $SVC_ACCOUNT-run --project $PROJECT_ID &> /dev/null
 
 if [ $? -ne 0 ]; then
   set -e
-  gcloud iam service-accounts create $IMAGE_NAME --project $PROJECT_ID
+  gcloud iam service-accounts create $IMAGE_NAME-run --project $PROJECT_ID
   set +e
 fi
 

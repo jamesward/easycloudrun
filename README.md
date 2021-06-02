@@ -4,6 +4,16 @@ Easy Cloud Run
 Tools for automating Cloud Run stuff for use on your machine, Cloud Build, and GitHub Actions.
 
 
+## Cloud Build Setup
+
+- Add roles to the Cloud Build service account:
+
+    | Name | Role |
+    |------|------|
+    |Security Admin|`roles/iam.securityAdmin`|
+    |Service Account Admin|`roles/iam.serviceAccountAdmin`|
+    |Cloud Run Admin|`roles/run.admin`|
+
 ## multiregion
 
 Deploy a service to all available regions and setup a GCLB in front
