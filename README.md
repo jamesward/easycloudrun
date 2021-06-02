@@ -3,6 +3,7 @@ Easy Cloud Run
 
 Tools for automating Cloud Run stuff for use on your machine, Cloud Build, and GitHub Actions.
 
+
 ## multiregion
 
 Deploy a service to all available regions and setup a GCLB in front
@@ -15,6 +16,7 @@ export PROJECT_ID=YOUR_PROJECT_ID
 export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
 export IMAGE_VERSION=OPTIONAL_IMAGE_VERSION
 export DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS
+export ROLES=OPTIONAL_ROLES_COMMA_SEPARATED
 export DOMAINS=YOUR_DOMAIN
 export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
 
@@ -23,6 +25,7 @@ docker run --rm \
   -eIMAGE_NAME=$IMAGE_NAME \
   -eIMAGE_VERSION=$IMAGE_VERSION \
   -eDEPLOY_OPTS=$DEPLOY_OPTS \
+  -eROLES=$ROLES \
   -eDOMAINS=$DOMAINS \
   -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
   -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
@@ -42,6 +45,7 @@ steps:
       - 'IMAGE_NAME=$REPO_NAME'
       - 'IMAGE_VERSION=$COMMIT_SHA'
       - 'DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS'
+      - 'ROLES=OPTIONAL_ROLES_COMMA_SEPARATED'
       - 'DOMAINS=YOUR_DOMAIN'
 ```
 
@@ -62,6 +66,7 @@ export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
 export IMAGE_VERSION=OPTIONAL_IMAGE_VERSION
 export REGION=us-central1 # or whatever region you want
 export DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS
+export ROLES=OPTIONAL_ROLES_COMMA_SEPARATED
 export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
 
 docker run --rm \
@@ -70,6 +75,7 @@ docker run --rm \
   -eIMAGE_VERSION=$IMAGE_VERSION \
   -eREGION=$REGION \
   -eDEPLOY_OPTS=$DEPLOY_OPTS \
+  -eROLES=$ROLES \
   -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
   -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
   --entrypoint=deploywithenvs \
@@ -89,6 +95,51 @@ steps:
       - 'IMAGE_VERSION=$COMMIT_SHA'
       - 'REGION=YOUR_REGION'
       - 'DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS'
+      - 'ROLES=OPTIONAL_ROLES_COMMA_SEPARATED'
+```
+
+
+## deploy
+
+Does a `gcloud run deploy`
+
+Run Locally:
+```
+export PROJECT_ID=YOUR_PROJECT_ID
+export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export IMAGE_VERSION=OPTIONAL_IMAGE_VERSION
+export REGION=us-central1 # or whatever region you want
+export DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS
+export ROLES=OPTIONAL_ROLES_COMMA_SEPARATED
+export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
+
+docker run --rm \
+  -ePROJECT_ID=$PROJECT_ID \
+  -eIMAGE_NAME=$IMAGE_NAME \
+  -eIMAGE_VERSION=$IMAGE_VERSION \
+  -eREGION=$REGION \
+  -eDEPLOY_OPTS=$DEPLOY_OPTS \
+  -eROLES=$ROLES \
+  -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
+  -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
+  --entrypoint=deploy \
+  ghcr.io/jamesward/easycloudrun
+```
+
+Cloud Build:
+```
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: deploywithenvs
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'BUILD_ID=$BUILD_ID'
+      - 'COMMIT_SHA=$COMMIT_SHA'
+      - 'IMAGE_NAME=$REPO_NAME'
+      - 'IMAGE_VERSION=$COMMIT_SHA'
+      - 'REGION=YOUR_REGION'
+      - 'DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS'
+      - 'ROLES=OPTIONAL_ROLES_COMMA_SEPARATED'
 ```
 
 

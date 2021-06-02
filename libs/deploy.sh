@@ -3,10 +3,11 @@
 # optional env var params:
 #   _TRIGGER_ID
 #   DEPLOY_OPTS
+#   ROLES
 #
 # todo: --platform=gke
 # todo: --no-allow-unauthenticated
-# 
+#
 
 #set -uxo pipefail
 
@@ -24,8 +25,6 @@ if [[ -z "${REGION}" ]]; then
   echo "REGION env var not set"
   exit 1
 fi
-
-set -e
 
 if [[ -z "${IMAGE_VERSION}" ]]; then
   readonly IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME"
@@ -51,7 +50,53 @@ if [[ ${#_LABELS[@]} -gt 0 ]]; then
   readonly LABELS="--labels=$(echo ${_LABELS[@]} | tr ' ' ',')"
 fi
 
-gcloud beta run deploy $IMAGE_NAME --platform=managed --allow-unauthenticated --image=$IMAGE_URL --region=$REGION $LABELS --project=$PROJECT_ID $DEPLOY_OPTS &> /dev/null
+
+readonly SVC_ACCOUNT=$IMAGE_NAME@$PROJECT_ID.iam.gserviceaccount.com
+
+gcloud iam service-accounts describe $SVC_ACCOUNT --project $PROJECT_ID &> /dev/null
+
+if [ $? -ne 0 ]; then
+  set -e
+  gcloud iam service-accounts create $IMAGE_NAME --project $PROJECT_ID
+  set +e
+fi
+
+readonly _EXISTING_ROLES=$(gcloud projects get-iam-policy $PROJECT_ID \
+  --flatten="bindings[].members" \
+  --format='value(bindings.role)' \
+  --filter="bindings.members:$SVC_ACCOUNT")
+
+for role in $_EXISTING_ROLES; do
+  set -e
+  gcloud projects remove-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SVC_ACCOUNT" \
+    --role=$role \
+    &> /dev/null
+  set +e
+done
+
+_ROLES=${ROLES//,/ }
+
+for role in $_ROLES; do
+  set -e
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SVC_ACCOUNT" \
+    --role=$role \
+    &> /dev/null
+  set +e
+done
+
+
+gcloud run deploy $IMAGE_NAME \
+  --allow-unauthenticated \
+  --platform=managed \
+  --image=$IMAGE_URL \
+  --region=$REGION \
+  --service-account=$SVC_ACCOUNT \
+  $LABELS \
+  $DEPLOY_OPTS \
+  --project=$PROJECT_ID \
+  &> /dev/null
 
 # todo: on deploy error, show it
 
