@@ -7,13 +7,17 @@
 # todo: --no-allow-unauthenticated
 #
 
-export SVC_ACCOUNT=$IMAGE_NAME-run@$PROJECT_ID.iam.gserviceaccount.com
+# max length is 30
+# todo: min length
+declare SVC_ACCOUNT_NAME=${IMAGE_NAME:0:26}-run
+
+export SVC_ACCOUNT=$SVC_ACCOUNT_NAME@$PROJECT_ID.iam.gserviceaccount.com
 
 gcloud iam service-accounts describe $SVC_ACCOUNT --project=$PROJECT_ID &> /dev/null
 
 if [ $? -ne 0 ]; then
   set -e
-  gcloud iam service-accounts create $IMAGE_NAME-run --project=$PROJECT_ID
+  gcloud iam service-accounts create $SVC_ACCOUNT_NAME --project=$PROJECT_ID
   set +e
 fi
 
