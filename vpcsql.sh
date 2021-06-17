@@ -46,6 +46,9 @@ declare instance=$IMAGE_NAME-$REGION
 
 gcloud compute networks describe $instance --project=$PROJECT_ID &> /dev/null
 
+declare rand1=$(( ( RANDOM % 63 ) + 1 ))
+declare rand2=$(( rand1 + 1 ))
+
 if [ $? -ne 0 ]; then
   set -e
 
@@ -57,7 +60,7 @@ if [ $? -ne 0 ]; then
 
   gcloud compute networks subnets create $instance \
     --network=$instance \
-    --range="10.$(( ( RANDOM % 64 ) + 1 )).0.0/28" \
+    --range="10.$rand1.0.0/28" \
     --region=$REGION \
     --project=$PROJECT_ID
 
@@ -153,7 +156,7 @@ gcloud beta compute networks vpc-access connectors describe $connector_id \
 
 if [ $? -ne 0 ]; then
   set -e
-  declare range="10.$(( ( RANDOM % 64 ) + 1 )).0.0/28"
+  declare range="10.$rand2.0.0/28"
   gcloud beta compute networks vpc-access connectors create $connector_id \
       --network=$instance \
       --range=$range \
