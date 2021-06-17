@@ -212,7 +212,7 @@ Required Cloud Build Service Account roles:
     |------|------|
     |Compute Network Admin|`roles/compute.networkAdmin`|
     |Compute Instance Admin|`roles/compute.instanceAdmin.v1`|
-    |Compute SQL Admin|`roles/cloudsql.admin`|
+    |Cloud SQL Admin|`roles/cloudsql.admin`|
     |Service Account User|`roles/iam.serviceAccountUser`|
     |Serverless VPC Access Admin|`roles/vpcaccess.admin`|
 
