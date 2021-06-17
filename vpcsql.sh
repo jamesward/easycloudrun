@@ -44,10 +44,10 @@ declare instance=$IMAGE_NAME-$REGION
 
 # VPC
 
-gcloud compute networks describe $instance --project=$PROJECT_ID &> /dev/null
-
 declare rand1=$(( ( RANDOM % 63 ) + 1 ))
 declare rand2=$(( rand1 + 1 ))
+
+gcloud compute networks describe $instance --project=$PROJECT_ID &> /dev/null
 
 if [ $? -ne 0 ]; then
   set -e
