@@ -158,8 +158,7 @@ if [ $? -ne 0 ]; then
       --network=$instance \
       --range=$range \
       --region=$REGION \
-      --project=$PROJECT_ID \
-      &> /dev/null
+      --project=$PROJECT_ID
 
   export DEPLOY_OPTS="$DEPLOY_OPTS --vpc-connector=$connector_id"
 

@@ -206,6 +206,15 @@ Required APIs:
 - [run.googleapis.com](https://console.cloud.google.com/apis/library/run.googleapis.com)
 - [containerregistry.googleapis.com](https://console.cloud.google.com/apis/library/containerregistry.googleapis.com)
 
+Required Cloud Build Service Account roles:
+
+    | Name | Role |
+    |------|------|
+    |Compute Network Admin|`roles/compute.networkAdmin`|
+    |Compute Instance Admin|`roles/compute.instanceAdmin.v1`|
+    |Compute SQL Admin|`roles/cloudsql.admin`|
+    |Service Account User|`roles/iam.serviceAccountUser`|
+
 Run Locally:
 ```
 export PROJECT_ID=YOUR_PROJECT_ID
@@ -241,6 +250,8 @@ steps:
       - 'DB_VERSION=YOUR_DB_VERSION'
       - 'DB_TIER=YOUR_DB_TIER'
       - 'DB_INIT_ARGS=OPTIONAL_CONTAINER_ARGS_FOR_DB_INIT'
+
+timeout: 20m
 ```
 
 GitHub Actions:
