@@ -39,8 +39,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Once an instance is created with a name, you can never create another with the same name, even after it is deleted.
 # So we pick a random 8 numbers to append to the instance name.
-declare instance="$IMAGE_NAME-$(cat /dev/urandom | tr -dc '0-9' | fold -w 8 | head -n 1)"
-#declare instance=$IMAGE_NAME-$REGION
+#declare instance="$IMAGE_NAME-$(cat /dev/urandom | tr -dc '0-9' | fold -w 8 | head -n 1)"
+declare instance=$IMAGE_NAME-$REGION
 
 # VPC
 
