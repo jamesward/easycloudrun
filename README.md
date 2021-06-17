@@ -252,7 +252,7 @@ steps:
       - 'DB_TIER=YOUR_DB_TIER'
       - 'DB_INIT_ARGS=OPTIONAL_CONTAINER_ARGS_FOR_DB_INIT'
 
-timeout: 20m
+timeout: 30m
 ```
 
 GitHub Actions:
