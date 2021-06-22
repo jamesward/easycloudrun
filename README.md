@@ -261,6 +261,53 @@ TODO
 ```
 
 
+## staticandapi
+
+Setup a load balancer where `/` is static and `/something` is backed by a Cloud Run service
+
+Run Locally:
+```
+export PROJECT_ID=YOUR_PROJECT_ID
+export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export REGION=YOUR_REGION
+export DOMAINS=YOUR_DOMAINS
+export FILE_PATH=YOUR_FILE_PATH
+export API_PATH=YOUR_API_PATH # Defaults to /api
+export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
+
+docker run --rm \
+  -ePROJECT_ID=$PROJECT_ID \
+  -eIMAGE_NAME=$IMAGE_NAME \
+  -eREGION=$REGION \
+  -eDOMAINS=$DOMAINS \
+  -eFILE_PATH=$FILE_PATH \
+  -eAPI_PATH=$API_PATH \
+  -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
+  -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
+  --entrypoint=staticandapi \
+  ghcr.io/jamesward/easycloudrun
+```
+
+Cloud Build:
+```
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: staticandapi
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'IMAGE_NAME=$REPO_NAME'
+      - 'REGION=YOUR_REGION'
+      - 'DOMAINS=YOUR_DOMAINS'
+      - 'FILE_PATH=YOUR_PATH_TO_STATIC_FILES'
+      - 'API_PATH=YOUR_PATH_TO_ROUTE_TO_CLOUD_RUN'
+```
+
+GitHub Actions:
+```
+TODO
+```
+
+
 ## listservices
 
 Run Locally:
