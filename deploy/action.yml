@@ -1,0 +1,7 @@
+name: 'Easy Cloud Run - Deploy'
+description: 'Deploys a Cloud Run service'
+runs:
+  using: 'composite'
+  steps:
+    - run: ${{ github.action_path }}/deploy.sh
+      shell: bash
