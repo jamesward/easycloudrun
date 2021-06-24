@@ -22,8 +22,8 @@ Does a `gcloud run deploy` with a dedicated service account and sets the CI/CD d
 |------|------|
 |Security Admin|`roles/iam.securityAdmin`|
 |Service Account Admin|`roles/iam.serviceAccountAdmin`|
-|Cloud Run Admin|`roles/run.admin`|
 |Service Account User|`roles/iam.serviceAccountUser`|
+|Cloud Run Admin|`roles/run.admin`|
 </details>
 
 <details>
@@ -74,7 +74,7 @@ steps:
 <details>
     <summary>GitHub Actions</summary>
 
-Setup GitHub Actions secrets: `GCP_PROJECT`, `GCP_CREDENTIALS` (the JSON for a service account with the required roles), `GCP_REGION`
+Setup GitHub Actions secrets: `GCP_PROJECT`, `GCP_REGION`, `GCP_CREDENTIALS` (the JSON for a service account with the required roles)
 
 ```yaml
 steps:
