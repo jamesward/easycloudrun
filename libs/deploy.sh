@@ -50,6 +50,8 @@ if [[ ${#_LABELS[@]} -gt 0 ]]; then
   readonly LABELS="--labels=$(echo ${_LABELS[@]} | tr ' ' ',')"
 fi
 
+set +e
+
 gcloud run deploy $IMAGE_NAME \
   --allow-unauthenticated \
   --platform=managed \
@@ -58,12 +60,11 @@ gcloud run deploy $IMAGE_NAME \
   --service-account=$SVC_ACCOUNT \
   $LABELS \
   $DEPLOY_OPTS \
-  --project=$PROJECT_ID \
-  &> /dev/null
+  --project=$PROJECT_ID
 
 # todo: on deploy error, show it
-
-set +e
-
-echo -e "Deployed $IMAGE_NAME in $REGION\n"
-
+if [ $? -ne 0 ]; then
+  echo "Error deploying $IMAGE_NAME in $REGION"
+else
+  echo "Deployed $IMAGE_NAME in $REGION"
+fi
