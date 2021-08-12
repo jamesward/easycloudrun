@@ -6,7 +6,6 @@
 #   ROLES
 #
 # todo: --platform=gke
-# todo: --no-allow-unauthenticated
 #
 
 #set -uxo pipefail
@@ -52,8 +51,12 @@ fi
 
 set +e
 
+# default to allow-unauthenticated
+if [[ $DEPLOY_OPTS != *"--no-allow-unauthenticated"* ]]; then
+  DEPLOY_OPTS="--allow-unauthenticated $DEPLOY_OPTS"
+fi
+
 gcloud run deploy $IMAGE_NAME \
-  --allow-unauthenticated \
   --platform=managed \
   --image=$IMAGE_URL \
   --region=$REGION \

@@ -463,6 +463,105 @@ steps:
 </details>
 
 
+
+## pubsubhandler
+
+Deploys a Cloud Run service which handles Pub/Sub events.
+
+<details>
+    <summary>Required APIs</summary>
+
+- [run.googleapis.com](https://console.cloud.google.com/apis/library/run.googleapis.com)
+- [containerregistry.googleapis.com](https://console.cloud.google.com/apis/library/containerregistry.googleapis.com)
+- [pubsub.googleapis.com](https://console.cloud.google.com/apis/library/pubsub.googleapis.com)
+</details>
+
+<details>
+    <summary>Required Roles</summary>
+
+| Name | Role |
+|------|------|
+|Security Admin|`roles/iam.securityAdmin`|
+|Service Account Admin|`roles/iam.serviceAccountAdmin`|
+|Service Account User|`roles/iam.serviceAccountUser`|
+|Cloud Run Admin|`roles/run.admin`|
+|Pub/Sub Editor|`roles/pubsub.editor`|
+</details>
+
+<details>
+    <summary>Run Locally</summary>
+
+```
+export PROJECT_ID=YOUR_PROJECT_ID
+export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export IMAGE_VERSION=OPTIONAL_IMAGE_VERSION
+export REGION=us-central1 # or whatever region you want
+export DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS
+export ROLES=OPTIONAL_ROLES_COMMA_SEPARATED
+export TOPIC=PUBSUB_TOPIC
+export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
+
+docker run --rm \
+  -ePROJECT_ID=$PROJECT_ID \
+  -eIMAGE_NAME=$IMAGE_NAME \
+  -eIMAGE_VERSION=$IMAGE_VERSION \
+  -eREGION=$REGION \
+  -eDEPLOY_OPTS=$DEPLOY_OPTS \
+  -eROLES=$ROLES \
+  -eTOPIC=$TOPIC \
+  -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
+  -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
+  --entrypoint=pubsubhandler \
+  ghcr.io/jamesward/easycloudruneasycloudrun
+```
+</details>
+
+<details>
+    <summary>Cloud Build</summary>
+
+```yaml
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: pubsubhandler
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'BUILD_ID=$BUILD_ID'
+      - 'COMMIT_SHA=$COMMIT_SHA'
+      - 'IMAGE_NAME=$REPO_NAME'
+      - 'IMAGE_VERSION=$COMMIT_SHA'
+      - 'REGION=YOUR_REGION'
+      - 'DEPLOY_OPTS=OPTIONAL_DEPLOY_OPTIONS'
+      - 'ROLES=OPTIONAL_ROLES_COMMA_SEPARATED'
+      - 'TOPIC=PUBSUB_TOPIC'
+```
+</details>
+
+<details>
+    <summary>GitHub Actions</summary>
+
+Setup GitHub Actions secrets: `GCP_PROJECT`, `GCP_REGION`, `GCP_CREDENTIALS` (the JSON for a service account with the required roles), `PUBSUB_TOPIC`
+
+```yaml
+steps:
+  - name: Setup gcloud
+    uses: google-github-actions/setup-gcloud@v0.2
+    with:
+      project_id: ${{ secrets.GCP_PROJECT }}
+      service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+      export_default_credentials: true
+
+  - name: Deploy
+    uses: jamesward/easycloudrun/pubsubhandler@main
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+      COMMIT_SHA: ${{ github.sha }}
+      IMAGE_NAME: ${{ github.event.repository.name }}
+      IMAGE_VERSION: ${{ github.sha }}
+      REGION: ${{ secrets.GCP_REGION }}
+      TOPIC: ${{ secrets.PUBSUB_TOPIC }}
+```
+</details>
+
 ## listservices
 
 <details>

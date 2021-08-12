@@ -1,0 +1,7 @@
+name: 'Easy Cloud Run - Pub/Sub Handler'
+description: 'Deploys a Cloud Run service which handles Pub/Sub events'
+runs:
+  using: 'composite'
+  steps:
+    - run: ${{ github.action_path }}/../pubsubhandler.sh
+      shell: bash
