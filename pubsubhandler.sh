@@ -60,5 +60,14 @@ if [ $? -ne 0 ]; then
     --push-endpoint=$SERVICE_URL/ \
     --push-auth-service-account=$INVOKER_SVC_ACCOUNT
 
+  PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+
+  PUBSUB_SERVICE_ACCOUNT="service-$PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com"
+
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:${PUBSUB_SERVICE_ACCOUNT}" \
+    --role='roles/iam.serviceAccountTokenCreator' \
+    &> /dev/null
+
   set +e
 fi
