@@ -332,6 +332,7 @@ Create a Cloud SQL instance in a VPC, deploy a Cloud Run service connected to th
 
 | Name | Role |
 |------|------|
+|Cloud Run Admin|`roles/run.admin`|
 |Compute Network Admin|`roles/compute.networkAdmin`|
 |Compute Instance Admin|`roles/compute.instanceAdmin.v1`|
 |Cloud SQL Admin|`roles/cloudsql.admin`|
