@@ -387,7 +387,27 @@ timeout: 30m
 <details>
     <summary>GitHub Actions</summary>
 
-    TODO
+```yaml
+steps:
+  - name: Setup gcloud
+    uses: google-github-actions/setup-gcloud@v0.2
+    with:
+      project_id: ${{ secrets.GCP_PROJECT }}
+      service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+      export_default_credentials: true
+
+  - name: Deploy
+    uses: jamesward/easycloudrun/vpcsql@main
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+      COMMIT_SHA: ${{ github.sha }}
+      IMAGE_NAME: ${{ github.event.repository.name }}
+      IMAGE_VERSION: ${{ github.sha }}
+      REGION: ${{ secrets.GCP_REGION }}
+      DB_VERSION: YOUR_DB_VERSION
+      DB_TIER: YOUR_DB_TIER
+      DB_INIT_ARGS: OPTIONAL_CONTAINER_ARGS_FOR_DB_INIT
+```
 </details>
 
 
