@@ -101,7 +101,7 @@ if [ $? -ne 0 ]; then
   echo "Creating Cloud SQL instance named $instance"
 
   declare db_user=postgres
-  declare db_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+  declare db_pass=$(dd bs=24 count=1 if=/dev/urandom status=none | base64 | tr +/ _.)
   declare db_name=postgres
 
   declare operation=$(gcloud beta sql instances create $instance \
