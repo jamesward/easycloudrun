@@ -171,5 +171,5 @@ fi
 
 
 # Cloud Run
-
+set -e
 $DIR/libs/deploy.sh
