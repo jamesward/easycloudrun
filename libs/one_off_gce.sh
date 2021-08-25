@@ -46,6 +46,12 @@ if [[ -z "${INSTANCE_NAME}" ]]; then
   exit 1
 fi
 
+if [[ -z "${IMAGE_VERSION}" ]]; then
+  readonly IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME"
+else
+  readonly IMAGE_URL="gcr.io/$PROJECT_ID/$IMAGE_NAME:$IMAGE_VERSION"
+fi
+
 # todo: --container-command=
 
 # todo: --service-account=
@@ -67,7 +73,7 @@ gcloud compute instances create-with-container $INSTANCE_NAME \
     --container-stdin \
     --container-tty \
     --metadata-from-file=startup-script=$dir/gce_startup_script.sh \
-    --container-image=gcr.io/$PROJECT_ID/$IMAGE_NAME \
+    --container-image=$IMAGE_URL \
     --container-arg=$DB_INIT_ARGS \
     --container-env=$ENVS \
     --network=$NETWORK \
