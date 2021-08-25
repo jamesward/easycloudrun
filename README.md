@@ -337,7 +337,9 @@ Create a Cloud SQL instance in a VPC, deploy a Cloud Run service connected to th
 |Compute Instance Admin|`roles/compute.instanceAdmin.v1`|
 |Cloud SQL Admin|`roles/cloudsql.admin`|
 |Service Account User|`roles/iam.serviceAccountUser`|
+|Service Account Admin|`roles/iam.serviceAccountAdmin`|
 |Serverless VPC Access Admin|`roles/vpcaccess.admin`|
+|Security Admin|`roles/iam.securityAdmin`|
 </details>
 
 <details>

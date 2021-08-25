@@ -98,11 +98,12 @@ gcloud beta sql instances describe $instance --project=$PROJECT_ID &> /dev/null
 if [ $? -ne 0 ]; then
   set -e
 
+  echo "Creating Cloud SQL instance named $instance"
+
   declare db_user=postgres
   declare db_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
   declare db_name=postgres
 
-  echo "Creating Cloud SQL instance named $instance"
   declare operation=$(gcloud beta sql instances create $instance \
       --database-version=$DB_VERSION \
       --tier=$DB_TIER \
