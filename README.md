@@ -377,7 +377,11 @@ steps:
     entrypoint: vpcsql
     env:
       - 'PROJECT_ID=$PROJECT_ID'
+      - 'BUILD_ID=$BUILD_ID'
+      - 'COMMIT_SHA=$COMMIT_SHA'
       - 'IMAGE_NAME=$REPO_NAME'
+      - 'IMAGE_VERSION=$COMMIT_SHA'
+      - 'ROLES=roles/cloudsql.client'
       - 'REGION=YOUR_REGION'
       - 'DB_VERSION=YOUR_DB_VERSION'
       - 'DB_TIER=YOUR_DB_TIER'

@@ -38,6 +38,7 @@ done
 _ROLES=${ROLES//,/ }
 
 for role in $_ROLES; do
+  echo "Adding Role $role to $SVC_ACCOUNT"
   set -e
   gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:$SVC_ACCOUNT" \
