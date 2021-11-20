@@ -37,10 +37,13 @@ done
 
 _ROLES=${ROLES//,/ }
 
+# todo: display error if adding a role fails
 for role in $_ROLES; do
+  echo "Adding Role $role to $SVC_ACCOUNT"
   set -e
   gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:$SVC_ACCOUNT" \
-    --role=$role
+    --role=$role \
+    &> /dev/null
   set +e
 done
