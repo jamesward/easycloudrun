@@ -56,7 +56,7 @@ fi
 
 # todo: --service-account=
 
-# todo: configurable
+# todo: get the zone from list of zones in region
 declare zone=$REGION-a
 
 # todo: configurable

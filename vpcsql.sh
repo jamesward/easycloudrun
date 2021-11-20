@@ -150,7 +150,9 @@ fi
 
 # max 23 chars?
 # todo: this can easily create naming collisions
-declare connector_id=${instance:0:23}
+declare lower_connector_id=${instance,,}
+declare legal_connector_id=${lower_connector_id//[^a-z0-9]/}
+declare connector_id=${legal_connector_id:0:23}
 gcloud beta compute networks vpc-access connectors describe $connector_id \
  --region=$REGION \
  --project=$PROJECT_ID &> /dev/null
