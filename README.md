@@ -438,6 +438,7 @@ Setup a load balancer where `/` is static and `/something` is backed by a Cloud 
 | Name | Role |
 |------|------|
 |Compute Network Admin|`roles/compute.networkAdmin`|
+|Compute Load Balancer Admin|`roles/compute.loadBalancerAdmin`|
 |Service Account User|`roles/iam.serviceAccountUser`|
 |Cloud Run Admin|`roles/run.admin`|
 </details>
