@@ -394,6 +394,8 @@ timeout: 30m
 <details>
     <summary>GitHub Actions</summary>
 
+Setup GitHub Actions secrets: `GCP_PROJECT`, `GCP_REGION`, `GCP_CREDENTIALS` (the JSON for a service account with the required roles)
+
 ```yaml
 steps:
   - name: Setup gcloud
@@ -486,7 +488,30 @@ steps:
 <details>
     <summary>GitHub Actions</summary>
 
-    TODO
+Setup GitHub Actions secrets: `GCP_PROJECT`, `GCP_REGION`, `GCP_CREDENTIALS` (the JSON for a service account with the required roles), `DOMAINS`
+
+
+```yaml
+steps:
+  - name: Setup gcloud
+    uses: google-github-actions/setup-gcloud@v0.2
+    with:
+      project_id: ${{ secrets.GCP_PROJECT }}
+      service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+      export_default_credentials: true
+
+  - name: Deploy
+    uses: jamesward/easycloudrun/staticandapi@main
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+      COMMIT_SHA: ${{ github.sha }}
+      IMAGE_NAME: ${{ github.event.repository.name }}
+      IMAGE_VERSION: ${{ github.sha }}
+      REGION: ${{ secrets.GCP_REGION }}
+      DOMAINS: ${{ secrets.DOMAINS }}
+      FILE_PATH: YOUR_PATH_TO_STATIC_FILES
+      API_PATH: YOUR_PATH_TO_ROUTE_TO_CLOUD_RUN
+```
 </details>
 
 

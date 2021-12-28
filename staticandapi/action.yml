@@ -1,0 +1,7 @@
+name: 'Easy Cloud Run - staticandapi'
+description: 'Setup a load balancer where / is static and /something is backed by a Cloud Run service'
+runs:
+  using: 'composite'
+  steps:
+    - run: ${{ github.action_path }}/../staticandapi.sh
+      shell: bash
