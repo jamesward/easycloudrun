@@ -132,6 +132,7 @@ if [ $? -ne 0 ]; then
 
   declare DATABASE_URL="$db_protocol://$db_user:$db_pass@$db_host/$db_name"
 
+  # todo: get zone where db was created and pass it to one_off_gce
   if [[ ! -z $DB_INIT_ARGS ]]; then
     export NETWORK=$instance
     export SUBNET=$instance

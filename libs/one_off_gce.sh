@@ -71,7 +71,7 @@ declare initArgsArray=($DB_INIT_ARGS)
 declare initArgs=""
 
 for initArg in "${initArgsArray[@]}"; do
-  initArgs="$initArgs --container-arg=\"$initArg\""
+  initArgs="$initArgs --container-arg=$initArg"
 done
 
 gcloud compute instances create-with-container $INSTANCE_NAME \
