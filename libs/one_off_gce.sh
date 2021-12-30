@@ -66,6 +66,14 @@ declare machineType=e2-small
 
 declare dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+declare initArgsArray=($DB_INIT_ARGS)
+
+declare initArgs=""
+
+for initArg in "${initArgsArray[@]}"; do
+  initArgs="$initArgs --container-arg=\"$initArg\""
+done
+
 gcloud compute instances create-with-container $INSTANCE_NAME \
     --container-restart-policy=never \
     --no-restart-on-failure \
@@ -74,7 +82,7 @@ gcloud compute instances create-with-container $INSTANCE_NAME \
     --container-tty \
     --metadata-from-file=startup-script=$dir/gce_startup_script.sh \
     --container-image=$IMAGE_URL \
-    --container-arg=$DB_INIT_ARGS \
+    $initArgs \
     --container-env=$ENVS \
     --network=$NETWORK \
     --subnet=$SUBNET \
