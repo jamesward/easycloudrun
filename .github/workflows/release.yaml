@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Login to GitHub Package Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pack
-        uses: buildpacks/github-actions/setup-pack@v4.0.0
+        uses: buildpacks/github-actions/setup-pack@v5.0.0
 
       - name: Build and Publish
         run: pack build ghcr.io/jamesward/easycloudrun --buildpack ghcr.io/jamesward/gcloud-buildpack --builder gcr.io/buildpacks/builder:v1 --run-image ghcr.io/jamesward/gcloud-buildpack-run --publish
