@@ -176,3 +176,7 @@ fi
 # Cloud Run
 set -e
 $DIR/libs/deploy.sh
+
+if [ $? -ne 0 ]; then
+  exit 1
+fi
