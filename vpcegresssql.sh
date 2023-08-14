@@ -60,7 +60,7 @@ if [ $? -ne 0 ]; then
 
   gcloud compute networks subnets create $instance \
     --network=$instance \
-    --range="10.$rand1.0.0/28" \
+    --range="10.$rand1.0.0/26" \
     --region=$REGION \
     --project=$PROJECT_ID
 
