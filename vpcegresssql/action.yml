@@ -1,0 +1,7 @@
+name: 'Easy Cloud Run - vpcegresssql'
+description: 'Create a Cloud SQL instance in a VPC, deploy a Cloud Run service connected to that database using VPC Egress'
+runs:
+  using: 'composite'
+  steps:
+    - run: ${{ github.action_path }}/../vpcegresssql.sh
+      shell: bash

@@ -313,6 +313,113 @@ steps:
 </details>
 
 
+## vpcegresssql
+
+Create a Cloud SQL instance in a VPC, deploy a Cloud Run service connected to that database using [VPC Egress](https://cloud.google.com/run/docs/configuring/vpc-direct-vpc)
+
+<details>
+    <summary>Required APIs</summary>
+
+- [servicenetworking.googleapis.com](https://console.cloud.google.com/apis/library/servicenetworking.googleapis.com)
+- [sqladmin.googleapis.com](https://console.cloud.google.com/apis/library/sqladmin.googleapis.com)
+- [vpcaccess.googleapis.com](https://console.cloud.google.com/apis/library/vpcaccess.googleapis.com)
+- [run.googleapis.com](https://console.cloud.google.com/apis/library/run.googleapis.com)
+- [containerregistry.googleapis.com](https://console.cloud.google.com/apis/library/containerregistry.googleapis.com)
+</details>
+
+<details>
+    <summary>Required Roles</summary>
+
+| Name | Role |
+|------|------|
+|Cloud Run Admin|`roles/run.admin`|
+|Compute Network Admin|`roles/compute.networkAdmin`|
+|Compute Instance Admin|`roles/compute.instanceAdmin.v1`|
+|Cloud SQL Admin|`roles/cloudsql.admin`|
+|Service Account User|`roles/iam.serviceAccountUser`|
+|Service Account Admin|`roles/iam.serviceAccountAdmin`|
+|Serverless VPC Access Admin|`roles/vpcaccess.admin`|
+|Security Admin|`roles/iam.securityAdmin`|
+</details>
+
+<details>
+    <summary>Run Locally</summary>
+
+```
+export PROJECT_ID=YOUR_PROJECT_ID
+export IMAGE_NAME=YOUR_GCR_IMAGE_NAME # gcr.io/YOUR_PROJECT/IMAGE_NAME
+export REGION=YOUR_REGION
+export DB_VERSION=YOUR_DB_VERSION # like: POSTGRES_13
+export DB_TIER=YOUR_DB_TIER # like: db-f1-micro
+export DB_INIT_ARGS=OPTIONAL_CONTAINER_ARGS_FOR_DB_INIT
+export GOOGLE_APPLICATION_CREDENTIALS=YOUR_TEST_CREDS_JSON
+
+docker run --rm \
+  -ePROJECT_ID=$PROJECT_ID \
+  -eIMAGE_NAME=$IMAGE_NAME \
+  -eREGION=$REGION \
+  -eDB_VERSION=$DB_VERSION \
+  -eDB_TIER=$DB_TIER \
+  -eDB_INIT_ARGS=$DB_INIT_ARGS \
+  -eCLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=/certs/svc_account.json \
+  -v$GOOGLE_APPLICATION_CREDENTIALS:/certs/svc_account.json \
+  --entrypoint=vpcegresssql \
+  ghcr.io/jamesward/easycloudrun
+```
+</details>
+
+<details>
+    <summary>Cloud Build</summary>
+
+```yaml
+steps:
+  - name: ghcr.io/jamesward/easycloudrun
+    entrypoint: vpcegresssql
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'BUILD_ID=$BUILD_ID'
+      - 'COMMIT_SHA=$COMMIT_SHA'
+      - 'IMAGE_NAME=$REPO_NAME'
+      - 'IMAGE_VERSION=$COMMIT_SHA'
+      - 'ROLES=roles/cloudsql.client'
+      - 'REGION=YOUR_REGION'
+      - 'DB_VERSION=YOUR_DB_VERSION'
+      - 'DB_TIER=YOUR_DB_TIER'
+      - 'DB_INIT_ARGS=OPTIONAL_CONTAINER_ARGS_FOR_DB_INIT'
+
+timeout: 30m
+```
+</details>
+
+<details>
+    <summary>GitHub Actions</summary>
+
+Setup GitHub Actions secrets: `GCP_PROJECT`, `GCP_REGION`, `GCP_CREDENTIALS` (the JSON for a service account with the required roles)
+
+```yaml
+steps:
+  - name: Setup gcloud
+    uses: google-github-actions/setup-gcloud@v0.2
+    with:
+      project_id: ${{ secrets.GCP_PROJECT }}
+      service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+      export_default_credentials: true
+
+  - name: Deploy
+    uses: jamesward/easycloudrun/vpcegresssql@main
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+      COMMIT_SHA: ${{ github.sha }}
+      IMAGE_NAME: ${{ github.event.repository.name }}
+      IMAGE_VERSION: ${{ github.sha }}
+      REGION: ${{ secrets.GCP_REGION }}
+      DB_VERSION: YOUR_DB_VERSION
+      DB_TIER: YOUR_DB_TIER
+      DB_INIT_ARGS: OPTIONAL_CONTAINER_ARGS_FOR_DB_INIT
+```
+</details>
+
+
 ## vpcsql
 
 Create a Cloud SQL instance in a VPC, deploy a Cloud Run service connected to that database
