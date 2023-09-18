@@ -130,7 +130,10 @@ fi
 
 readonly BACKEND_NEGS=$(gcloud beta compute backend-services describe --global $BACKEND_NAME --project $PROJECT_ID --flatten="backends[]" --format="value(backends.group.basename())")
 
-readonly REGIONS=$(gcloud run regions list --project $PROJECT_ID --format="value(locationId)")
+readonly REGIONS_ORIG=$(gcloud run regions list --project $PROJECT_ID --format="value(locationId)")
+
+# Note: me-central2 does not work yet for Cloud Run
+readonly REGIONS=${REGIONS_ORIG//me-central2/}
 
 #readonly REGIONS="us-central1 us-west1"
 
