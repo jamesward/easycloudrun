@@ -151,12 +151,14 @@ for REGION in $REGIONS; do
   gcloud beta compute network-endpoint-groups describe $NEG_NAME --region=$REGION --project $PROJECT_ID &> /dev/null
 
   if [ $? -ne 0 ]; then
+    echo "Creating NEG $NEG_NAME in $REGION"
     set -e
     gcloud beta compute network-endpoint-groups create $NEG_NAME --region=$REGION --network-endpoint-type=SERVERLESS --cloud-run-service=$IMAGE_NAME --project $PROJECT_ID
     set +e
   fi
 
   if [[ "$BACKEND_NEGS" != *"$NEG_NAME"* ]]; then
+    echo "Adding backend $NEG_NAME in $REGION to $BACKEND_NAME"
     set -e
     gcloud beta compute backend-services add-backend --global $BACKEND_NAME --network-endpoint-group-region=$REGION --network-endpoint-group=$NEG_NAME --project $PROJECT_ID
     set +e
